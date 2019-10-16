@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="translatetortestbot" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\User\\Desktop\\dev\\TranslateBot\\TranslateBot\\obj\\Release\\netcoreapp2\.1\\win-arm\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>
