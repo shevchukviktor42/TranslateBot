@@ -8,10 +8,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using TranslateBot.Bots;
+using TranslateBot.Models;
+using TranslateBot.Data;
+using TranslateBot.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace TranslateBot
 {
@@ -29,11 +34,16 @@ namespace TranslateBot
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+          
             // Create the Bot Framework Adapter with error handling enabled.
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
-
+            services.AddDbContext<LocalDbContext>(options =>   options.UseSqlite("Data Source=Database.db"));
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();
+            services.AddTransient<IRepository, PhraseRepository>();
+            
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

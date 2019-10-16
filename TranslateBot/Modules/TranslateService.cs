@@ -72,7 +72,6 @@ namespace TranslateBot.Modules
                     request.RequestUri = new Uri(endpoint + route);
                     request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     request.Headers.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-                    //request.Headers.Add("Ocp-Apim-Subscription-Region", "northeurope");
                     request.Headers.Add("X-ClientTraceId", Guid.NewGuid().ToString());
 
                     HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(false);

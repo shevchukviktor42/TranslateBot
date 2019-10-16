@@ -10,15 +10,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using TranslateBot.Data;
+using TranslateBot.Models;
 using TranslateBot.Modules;
+using TranslateBot.Repositories;
 
 namespace TranslateBot.Bots
 {
     public class EchoBot : ActivityHandler
     {
+        private readonly LocalDbContext context;
+        private IRepository repository;
+        
+        
+        public EchoBot(IRepository repository, LocalDbContext context)
+        {
+            this.repository = repository;
+            this.context = context;
+        }
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
+            
             await turnContext.SendActivityAsync(MessageFactory.Text(await TranslateText(turnContext.Activity.Text)), cancellationToken);
         }
 
@@ -35,16 +48,17 @@ namespace TranslateBot.Bots
 
         protected async Task<string> TranslateText(string text)
         {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+           
+            
             var splitStr = Regex.Split(text, @"(?<=[\.!\?;])\s+");
             for (int i = 0; i < splitStr.Length; i++)
             {
-                if (dictionary.ContainsKey(splitStr[i]))
-                    splitStr[i] = dictionary[splitStr[i]];
+                if (repository.Exists(splitStr[i]))
+                    splitStr[i] = repository.Get(splitStr[i]).dst;
                 else
                 {
                     string tmp = await TranslateService.Translator.translate(splitStr[i]);
-                    dictionary.Add(splitStr[i], tmp);
+                    repository.Add(new Phrase { src = splitStr[i], dst = tmp });
                     splitStr[i] = tmp;
                 }
             }
