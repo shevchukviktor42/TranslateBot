@@ -1,0 +1,37 @@
+﻿@model TranslateBot.Models.Phrase
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+</head>
+<body>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+       
+        <dd>
+            @Html.DisplayFor(model => model.src)
+        </dd>
+      
+        <dd>
+            @Html.DisplayFor(model => model.dst)
+        </dd>
+    </dl>
+    @Html.ActionLink("Delete", "DeleteConfirmed", new { id = Model.PhraseId },
+               new { onclick = "return confirm('Are sure wants to delete?');" }) |
+    @Html.ActionLink("Back to List", "Index")
+
+</div>
+</body>
+</html>
+

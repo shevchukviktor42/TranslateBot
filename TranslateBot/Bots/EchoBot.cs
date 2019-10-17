@@ -19,19 +19,18 @@ namespace TranslateBot.Bots
 {
     public class EchoBot : ActivityHandler
     {
-        private readonly LocalDbContext context;
+
         private IRepository repository;
-        
-        
-        public EchoBot(IRepository repository, LocalDbContext context)
+
+
+        public EchoBot(IRepository repository)
         {
             this.repository = repository;
-            this.context = context;
+
         }
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            
             await turnContext.SendActivityAsync(MessageFactory.Text(await TranslateText(turnContext.Activity.Text)), cancellationToken);
         }
 
@@ -48,8 +47,8 @@ namespace TranslateBot.Bots
 
         protected async Task<string> TranslateText(string text)
         {
-           
-            
+
+
             var splitStr = Regex.Split(text, @"(?<=[\.!\?;])\s+");
             for (int i = 0; i < splitStr.Length; i++)
             {
@@ -63,7 +62,7 @@ namespace TranslateBot.Bots
                 }
             }
 
-                string res = splitStr.Aggregate(((prev, current) => (prev+" " + current)));
+            string res = splitStr.Aggregate(((prev, current) => (prev + " " + current)));
             return res;
         }
     }

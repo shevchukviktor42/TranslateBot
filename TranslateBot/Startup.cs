@@ -17,6 +17,7 @@ using TranslateBot.Models;
 using TranslateBot.Data;
 using TranslateBot.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 
 namespace TranslateBot
 {
@@ -33,16 +34,15 @@ namespace TranslateBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-          
+            services.AddDbContext<LocalDbContext>(options =>options.UseSqlite("Data Source=Database.db"));
+         
             // Create the Bot Framework Adapter with error handling enabled.
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
-            services.AddDbContext<LocalDbContext>(options =>   options.UseSqlite("Data Source=Database.db"));
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();
             services.AddTransient<IRepository, PhraseRepository>();
-            
-            
+            services.AddRouting();
+
 
         }
 
@@ -61,8 +61,13 @@ namespace TranslateBot
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            //app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseHttpsRedirection();
+            
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                name: "default", template: "{controller=Phrases}/{action=Index}/{id?}") ;
+            });
         }
     }
 }

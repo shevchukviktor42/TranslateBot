@@ -16,11 +16,6 @@ namespace TranslateBot.Data
 
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder
-        //        .UseSqlite(@"Data Source=DataBase.db;");
-        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Phrase>().ToTable("Phrases");
